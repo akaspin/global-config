@@ -55,6 +55,7 @@ class (Default a, Typeable a) => GlobalConfig a where
     
     -- | Set config handler
     onSetConfig :: a -> IO ()
+    onSetConfig _ = return ()
     
     -- | Get global config
     getConfig :: IO a
