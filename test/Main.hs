@@ -55,7 +55,8 @@ data Config = Config {
 instance Default Config where
     def = Config 0 ""
     
-instance GlobalConfig Config
+instance GlobalConfig Config where
+    onSetConfig = print
 
     
     

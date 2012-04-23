@@ -20,23 +20,24 @@
 -- > instance Default Config
 -- >    def = Config 0 False
 -- > 
--- > instance GlobalConfig Config
--- > 
+-- > instance GlobalConfig Config where
+-- >    onSetConfig = print
+-- >    
 -- > main :: IO ()
 -- > main = do
 -- >    -- try to read unitialized config
 -- >    c1 <- getConfig 
--- >    print (c1 :: Config)
 -- >    -- Config {configInt=0, configBool=False}
 -- >    
 -- >    -- set config and read it
 -- >    setConfig $ Config 1 True
+-- >    -- Config {configInt=1, configBool=True}
 -- >    c2 <- getConfig
 -- >    print (c1 :: Config)
 -- >    -- Config {configInt=1, configBool=True}
 
 module Data.Global.Config (
-    GlobalConfig (setConfig, getConfig)
+    GlobalConfig (setConfig, onSetConfig, getConfig)
 ) where
 
 import Data.Typeable (Typeable)
@@ -48,7 +49,12 @@ import Data.Default (Default(def))
 class (Default a, Typeable a) => GlobalConfig a where
     -- | Init global config
     setConfig :: a -> IO ()
-    setConfig e = stubConfig `writeIORef` e 
+    setConfig e = do
+        stubConfig `writeIORef` e
+        onSetConfig e 
+    
+    -- | Set config handler
+    onSetConfig :: a -> IO ()
     
     -- | Get global config
     getConfig :: IO a
