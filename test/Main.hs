@@ -56,7 +56,7 @@ instance Default Config where
     def = Config 0 ""
     
 instance GlobalConfig Config where
-    onSetConfig = print
+    onSetConfig = liftIO . print
 
     
     

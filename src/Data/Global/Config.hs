@@ -40,6 +40,8 @@ module Data.Global.Config (
     GlobalConfig (setConfig, onSetConfig, getConfig)
 ) where
 
+import Control.Monad.IO.Class (MonadIO, liftIO)
+
 import Data.Typeable (Typeable)
 import Data.Global (declareIORef)
 import Data.IORef (IORef, writeIORef, readIORef)
@@ -48,18 +50,18 @@ import Data.Default (Default(def))
 -- | Global configuration class
 class (Default a, Typeable a) => GlobalConfig a where
     -- | Init global config
-    setConfig :: a -> IO ()
+    setConfig :: MonadIO m => a -> m ()
     setConfig e = do
-        stubConfig `writeIORef` e
+        liftIO $ stubConfig `writeIORef` e
         onSetConfig e 
     
     -- | Set config handler
-    onSetConfig :: a -> IO ()
+    onSetConfig :: MonadIO m => a -> m ()
     onSetConfig _ = return ()
     
     -- | Get global config
-    getConfig :: IO a
-    getConfig = readIORef stubConfig
+    getConfig :: MonadIO m => m a
+    getConfig = liftIO $ readIORef stubConfig
     
     -- | Stub enviroment
     stubConfig :: IORef a

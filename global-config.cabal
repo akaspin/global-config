@@ -1,5 +1,5 @@
 name:           global-config
-version:        0.2.1
+version:        0.3.0
 cabal-version:  >= 1.8
 build-type:     Simple
 author:         Alexander Dorofeev <aka.spin@gmail.com>spin
@@ -23,7 +23,8 @@ library
   hs-source-dirs:   src
   build-depends:    base >= 4 && < 5,
                    global-variables,
-                   data-default
+                   data-default,
+                   transformers
   ghc-options:      -Wall
   exposed-modules:  Data.Global.Config
 
